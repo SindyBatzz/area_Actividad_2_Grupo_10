@@ -5,6 +5,8 @@ App de Streamlit para explorar el Qini del T-learner y la tabla de políticas de
 Correr con:  streamlit run streamlit_starter.py
 """
 
+from pathlib import Path
+
 import pandas as pd
 import numpy as np
 import streamlit as st
@@ -25,7 +27,8 @@ _trapz = getattr(np, "trapezoid", None) or np.trapz
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("data/uplift_campaign.csv")
+    # Ruta relativa al archivo, para que funcione igual local y en Streamlit Cloud
+    return pd.read_csv(Path(__file__).parent / "data" / "uplift_campaign.csv")
 
 
 @st.cache_data
@@ -182,7 +185,7 @@ with col_tabla:
             "Valor neto por cliente ($)": "${:+.2f}",
             "Valor neto total ($)": "${:+,.2f}",
         }),
-        hide_index=True, use_container_width=True,
+        hide_index=True, width="stretch",
     )
     st.bar_chart(tabla.set_index("% contactado")["Valor neto total ($)"], color=GREEN)
     st.caption(
